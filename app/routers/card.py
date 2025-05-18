@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from datetime import datetime
+from app.core.deps import get_current_user
 
 # 카드 목록 관련
 from app.models.card_list import Card
@@ -15,13 +16,17 @@ from app.schemas.card_approval_domestic import CardApprovalDomesticSchema
 from app.models.card_bill import CardBill
 from app.schemas.card_bill import CardBillSchema
 
-# 응답 스키마
+# 응답 스키마/유효성 검사
 # 카드 목록
 from app.schemas.card_response import CardListResponse
+from app.schemas.card_list_request import CardListRequest
 # 카드 청구
+from app.schemas.card_bill_request import CardBillRequest
 from app.schemas.card_bill_response import CardBillListResponse
+
 # 카드 승인
 from app.schemas.card_approval_domestic_response import CardApprovalDomesticResponse
+from app.schemas.card_approval_domestic_request import CardApprovalDomesticRequest
 
 from typing import List
 
@@ -35,14 +40,15 @@ router = APIRouter(
 @router.get("/cards", response_model=CardListResponse)
 def get_cards(
     # 요청 파라미터 (필수 아니면 default=None)
-    user_id: str = Query(...),
+    current_user: str = Depends(get_current_user),
     org_code: str = Query(...),
     search_timestamp: str = Query(default=None),
     next_page: str = Query(default=None),
     limit: int = Query(...),
+    req: CardListRequest = Depends(),
     db: Session = Depends(get_db)
 ):
-    query = db.query(Card).filter(Card.user_id == user_id, Card.org_code == org_code)
+    query = db.query(Card).filter(Card.user_id == current_user, Card.org_code == org_code)
 
     if next_page:
         query = query.filter(Card.card_id > next_page)
@@ -55,7 +61,7 @@ def get_cards(
     return {
         "rsp_code": "00000",
         "rsp_msg": "정상처리",
-        "search_timestamp": ...,
+        "search_timestamp": datetime.now().strftime("%Y%m%d%H%M%S"),
         "card_cnt": len(cards),
         "card_list": cards,
         "next_page": next_page_value
@@ -65,15 +71,16 @@ def get_cards(
 @router.get("/cards/{card_id}/approval-domestic", response_model=CardApprovalDomesticResponse)
 def get_domestic_approvals(
     card_id: str,
-    user_id: str = Query(...),
+    current_user: str = Depends(get_current_user),
     from_date: str = Query(...),
     to_date: str = Query(...),
     next_page: str = Query(default=None),
     limit: int = Query(...),
+    req: CardApprovalDomesticRequest = Depends(),
     db: Session = Depends(get_db)
 ):
     query = db.query(CardApprovalDomestic).filter(
-        CardApprovalDomestic.user_id == user_id,
+        CardApprovalDomestic.user_id == current_user,
         CardApprovalDomestic.card_id == card_id,
         CardApprovalDomestic.approved_dtime >= from_date,
         CardApprovalDomestic.approved_dtime <= to_date
@@ -99,16 +106,17 @@ def get_domestic_approvals(
 # 카드 지불 관련
 @router.get("/bills", response_model=CardBillListResponse)
 def get_card_bills(
-    user_id: str = Query(...),
+    current_user: str = Depends(get_current_user),
     org_code: str = Query(...),
     from_month: str = Query(...),
     to_month: str = Query(...),
     next_page: str = Query(default=None),
     limit: int = Query(...),
+    req: CardBillRequest = Depends(),
     db: Session = Depends(get_db)
 ):
     query = db.query(CardBill).filter(
-        CardBill.user_id == user_id,
+        CardBill.user_id == current_user,
         CardBill.charge_month >= from_month,
         CardBill.charge_month <= to_month
     )

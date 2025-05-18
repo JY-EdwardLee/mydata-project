@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, Integer, Float
 from app.core.database import Base
+import uuid
 
 class CardApprovalDomestic(Base):
     __tablename__ = "card_approvals_domestic"

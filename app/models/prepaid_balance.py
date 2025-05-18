@@ -1,5 +1,6 @@
 from sqlalchemy import Column, String, Float
 from app.core.database import Base
+import uuid
 
 class PrepaidBalance(Base):
     __tablename__ = "prepaid_balances"

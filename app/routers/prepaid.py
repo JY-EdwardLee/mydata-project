@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.orm import Session
 from app.core.database import get_db
+from app.core.deps import get_current_user
 
 # 선불카드 잔액 관련
 from app.models.prepaid_balance import PrepaidBalance
@@ -27,7 +28,11 @@ router = APIRouter(
 # 선불카드 잔액
 
 @router.post("/balance", response_model=PrepaidBalanceResponse)
-def get_prepaid_balance(req: PrepaidBalanceRequest, db: Session = Depends(get_db)):
+def get_prepaid_balance(
+    req: PrepaidBalanceRequest, 
+    current_user: str = Depends(get_current_user),
+    db: Session = Depends(get_db)
+    ):
     row = db.query(PrepaidBalance).filter(
         PrepaidBalance.user_id == "user123",  # 필요 시 token 또는 user_id 추출
         PrepaidBalance.pp_id == req.pp_id,
@@ -50,7 +55,11 @@ def get_prepaid_balance(req: PrepaidBalanceRequest, db: Session = Depends(get_db
 
 # 선불카드 승인
 @router.post("/approval", response_model=PrepaidApprovalResponse)
-def get_prepaid_approvals(req: PrepaidApprovalRequest, db: Session = Depends(get_db)):
+def get_prepaid_approvals(
+    req: PrepaidApprovalRequest,
+    current_user: str = Depends(get_current_user),
+    db: Session = Depends(get_db)
+    ):
     query = db.query(PrepaidApproval).filter(
         PrepaidApproval.user_id == "user123",
         PrepaidApproval.approved_dtime >= req.from_date,

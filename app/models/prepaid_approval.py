@@ -1,4 +1,5 @@
 from sqlalchemy import Column, String, Float
+import uuid
 from app.core.database import Base
 
 class PrepaidApproval(Base):
