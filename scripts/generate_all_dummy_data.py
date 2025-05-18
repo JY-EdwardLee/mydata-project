@@ -22,12 +22,26 @@ fake = Faker()
 Faker.seed(777)
 db = SessionLocal()
 
-ORG_CODES = [
-    "우체국", "KB국민카드", "우리카드", "SC은행", "농협은행",
-    "하나카드", "롯데카드", "우리은행", "국민은행", "IBK기업은행",
-    "신한은행", "하나은행", "삼성카드", "신한카드", "현대카드",
-    "비씨카드", "미래에셋생명", "카카오뱅크"
-]
+ORG_CODES = {
+"POST": "우체국",
+"KB_CARD": "KB국민카드",
+"WOORI_CARD": "우리카드",
+"SC": "SC은행",
+"NONGHYUP": "농협은행",
+"HANA_CARD": "하나카드",
+"LOTTE": "롯데카드",
+"WOORI": "우리은행",
+"KB_BANK": "국민은행",
+"IBK": "IBK기업은행",
+"SHINHAN_BANK": "신한은행",
+"HANA_BANK": "하나은행",
+"SAMSUNG": "삼성카드",
+"SHINHAN_CARD": "신한카드",
+"HYUNDAI": "현대카드",
+"BC": "비씨카드",
+"MIRAE": "미래에셋생명",
+"KAKAO": "카카오뱅크"
+}
 
 try:
     # 1. 사용자 생성
@@ -51,7 +65,7 @@ try:
     for user in users:
         for _ in range(random.randint(1, 7)):
             card_id = f"CARD_{uuid.uuid4().hex[:8]}"
-            org_code = random.choice(ORG_CODES)
+            org_code = random.choice(list(ORG_CODES.keys()))
             cards.append(Card(
                 user_id=user.id,
                 card_id=card_id,
@@ -101,7 +115,7 @@ try:
     print("⭐ 포인트 정보 생성 중...")
     points = []
     for user in users:
-        for org_code in random.sample(ORG_CODES, random.randint(1, 4)):
+        for org_code in random.sample(list(ORG_CODES.keys()), random.randint(1, 4)):
             points.append(Point(
                 id=str(uuid.uuid4()),  # id 필드 추가
                 user_id=user.id,
@@ -121,7 +135,7 @@ try:
     for user in users:
         for _ in range(random.randint(0, 4)):
             pp_id = f"PP_{uuid.uuid4().hex[:8]}"
-            org_code = random.choice(ORG_CODES)
+            org_code = random.choice(list(ORG_CODES.keys()))
             timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
 
             prepaid_balances.append(PrepaidBalance(
@@ -162,7 +176,7 @@ try:
             short_loans.append(LoanShortTerm(
                 id=str(uuid.uuid4()),  # id 필드 추가
                 user_id=user.id,
-                org_code=random.choice(ORG_CODES),
+                org_code=random.choice(list(ORG_CODES.keys())),
                 search_timestamp=datetime.now().strftime("%Y%m%d%H%M%S"),
                 loan_dtime=fake.date_time_between(start_date="-2M", end_date="now").strftime("%Y%m%d%H%M%S"),
                 loan_amt=random.randint(100000, 1000000),
@@ -175,7 +189,7 @@ try:
             long_loans.append(LoanLongTerm(
                 id=str(uuid.uuid4()),  # id 필드 추가
                 user_id=user.id,
-                org_code=random.choice(ORG_CODES),
+                org_code=random.choice(list(ORG_CODES.keys())),
                 search_timestamp=datetime.now().strftime("%Y%m%d%H%M%S"),
                 loan_num=f"LN{uuid.uuid4().hex[:8]}",
                 loan_dtime=fake.date_between(start_date="-1y", end_date="today").strftime("%Y%m%d"),
