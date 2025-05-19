@@ -56,7 +56,7 @@
 | rsp_msg | Y | string | 응답메시지 | "정상처리" |
 | approved_cnt | Y | number | 국내승인목록수 | 3 |
 | approved_list | Y | array | 국내승인목록 | - |
-| └ approved_num | Y | string | 승인번호 | "12345678" |
+| └ approved_num | Y | string | 승인번호 | "12345678" |`
 | └ approved_dtime | Y | string | 승인일시 | "202402151030" |
 | └ status | Y | string | 결제상태 | "01" (승인) |
 | └ pay_type | Y | string | 사용구분 | "01" (신용) |
