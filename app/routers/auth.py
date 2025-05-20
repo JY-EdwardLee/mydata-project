@@ -29,6 +29,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
 def login(
     username: str = Form(...),
     password: str = Form(...),
+    useremail: str = Form(...),
     db: Session = Depends(get_db)
 ):
     db_user = db.query(User).filter(User.username == username).first()

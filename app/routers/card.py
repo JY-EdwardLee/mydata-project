@@ -41,15 +41,17 @@ router = APIRouter(
 def get_cards(
     # 요청 파라미터 (필수 아니면 default=None)
     current_user: str = Depends(get_current_user),
-    org_code: str = Query(...),
+    org_code: List[str] = Query(default=None, description="여러 org_code를 지정할 수 있습니다"),
     search_timestamp: str = Query(default=None),
     next_page: str = Query(default=None),
     limit: int = Query(...),
     req: CardListRequest = Depends(),
-    db: Session = Depends(get_db)
-):
-    query = db.query(Card).filter(Card.user_id == current_user, Card.org_code == org_code)
-
+    db: Session = Depends(get_db),
+    ):
+    # 파라미터에 입력한 값을 비교하는 query
+    query = db.query(Card).filter(Card.user_id == current_user)    
+    if org_code:
+        query = db.query(Card).filter(Card.user_id == current_user, Card.org_code.in_(org_code))
     if next_page:
         query = query.filter(Card.card_id > next_page)
 

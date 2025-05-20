@@ -5,7 +5,7 @@ from app.core.config import settings
 from app.core.database import engine, Base
 # from app.models import card_approval
 # from app.routers import card_approval
-from app.routers import card, prepaid, asset, auth
+from app.routers import card, prepaid, asset, auth, dummy
 from app.models.user import User
 
 
@@ -17,6 +17,7 @@ app.include_router(card.router)
 app.include_router(prepaid.router)
 app.include_router(asset.router)
 app.include_router(auth.router)
+app.include_router(dummy.router)
 
 # 데이터베이스 테이블 생성
 Base.metadata.create_all(bind=engine)

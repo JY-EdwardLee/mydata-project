@@ -5,7 +5,7 @@ from typing import Optional
 
 
 class CardListRequest(BaseModel):
-    org_code: str = Field(..., min_length=2, max_length=10, pattern=r"^[A-Z]+$", description="기관 코드 (대문자)")
+    org_code: str = Field(..., min_length=2, description="기관 코드 (대문자)")
     search_timestamp: Optional[str] = Field(
         None, pattern=r"^\d{14}$", description="조회 타임스탬프 (예: 20240301120000)"
     )
