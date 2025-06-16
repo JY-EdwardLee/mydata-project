@@ -34,7 +34,7 @@ def get_prepaid_balance(
     db: Session = Depends(get_db)
     ):
     row = db.query(PrepaidBalance).filter(
-        PrepaidBalance.user_id == "user123",  # 필요 시 token 또는 user_id 추출
+        PrepaidBalance.user_id == current_user,
         PrepaidBalance.pp_id == req.pp_id,
         PrepaidBalance.search_timestamp == req.search_timestamp
     ).first()
@@ -61,7 +61,7 @@ def get_prepaid_approvals(
     db: Session = Depends(get_db)
     ):
     query = db.query(PrepaidApproval).filter(
-        PrepaidApproval.user_id == "user123",
+        PrepaidApproval.user_id == current_user,
         PrepaidApproval.approved_dtime >= req.from_date,
         PrepaidApproval.approved_dtime <= req.to_date
     )

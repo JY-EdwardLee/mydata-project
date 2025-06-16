@@ -1,7 +1,7 @@
 # 로그인용 라우터
 
 # app/routers/auth.py
-from fastapi import APIRouter, HTTPException, Form, Depends, HTTPException, status
+from fastapi import APIRouter, HTTPException, Form, Depends, status
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.models.user import User
