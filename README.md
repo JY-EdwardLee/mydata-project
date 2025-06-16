@@ -34,3 +34,13 @@
 ---
 ### Maintainer
 - Name : Edward Lee
+
+## ✅ Running Tests
+
+Install dependencies and run `pytest`:
+
+```bash
+pip install -r requirements.txt
+pip install pytest
+pytest
+```
