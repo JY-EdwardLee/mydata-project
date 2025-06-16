@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from pydantic import BaseModel
 from typing import List, Optional
 from app.schemas.card_approval_domestic import CardApprovalDomesticSchema
 
