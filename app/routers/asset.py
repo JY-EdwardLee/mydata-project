@@ -13,7 +13,7 @@ from app.schemas.loan_short_term_response import LoanShortTermListResponse
 from app.models.loan_long_term import LoanLongTerm
 from app.schemas.loan_long_term_response import LoanLongTermListResponse
 
-from app.schemas.point_requset import PointRequest
+from app.schemas.point_request import PointRequest
 
 router = APIRouter(
     prefix="/v1/card",
